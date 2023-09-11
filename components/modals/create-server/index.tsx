@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,20 +8,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import CreateServerForm from "./form";
+import { useModal } from "@/hooks/use-modal-store";
 
-export default function CreateServerModal() {
-  const [isMounted, setIsMounted] = useState(false);
+type Props = {
+  isInitial?: boolean;
+};
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+export default function CreateServerModal({ isInitial }: Props) {
+  const { isOpen, onClose, type } = useModal();
 
-  if (!isMounted) {
-    return null;
-  }
+  const isModalOpen = type === "createServer" && isOpen;
 
   return (
-    <Dialog open>
+    <Dialog open={isInitial || isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
@@ -33,7 +31,7 @@ export default function CreateServerModal() {
             start talking.
           </DialogDescription>
         </DialogHeader>
-        <CreateServerForm />
+        <CreateServerForm isInitial={isInitial} />
       </DialogContent>
     </Dialog>
   );

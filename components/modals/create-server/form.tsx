@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import * as z from "zod";
 
@@ -22,7 +22,11 @@ import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/file-upload";
 import { useRouter } from "next/navigation";
 
-export default function CreateServerForm() {
+type Props = {
+  isInitial?: boolean;
+};
+
+export default function CreateServerForm({ isInitial }: Props) {
   const router = useRouter();
 
   const form = useForm({
@@ -32,6 +36,12 @@ export default function CreateServerForm() {
       imageUrl: "",
     },
   });
+
+  useEffect(() => {
+    return () => {
+      form.reset();
+    };
+  }, [form]);
 
   const isLoading = form.formState.isSubmitting;
 
@@ -43,9 +53,11 @@ export default function CreateServerForm() {
     });
 
     form.reset();
-
     router.refresh();
+
+    if (isInitial) {
     window.location.reload();
+    }
   };
   return (
     <Form {...form}>

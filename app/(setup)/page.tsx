@@ -21,5 +21,5 @@ export default async function page() {
     return redirect(`/servers/${server.id}`);
   }
 
-  return <CreateServerModal />;
+  return <CreateServerModal isInitial />;
 }
