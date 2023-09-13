@@ -31,7 +31,7 @@ export default function CreateServerModal({ isInitial }: Props) {
             start talking.
           </DialogDescription>
         </DialogHeader>
-        <CreateServerForm isInitial={isInitial} />
+        <CreateServerForm />
       </DialogContent>
     </Dialog>
   );

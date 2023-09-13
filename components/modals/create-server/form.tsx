@@ -21,13 +21,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/file-upload";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
-type Props = {
-  isInitial?: boolean;
-};
-
-export default function CreateServerForm({ isInitial }: Props) {
+export default function CreateServerForm() {
   const router = useRouter();
+  const { onClose } = useModal();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -37,6 +35,7 @@ export default function CreateServerForm({ isInitial }: Props) {
     },
   });
 
+  // reset form on unmount
   useEffect(() => {
     return () => {
       form.reset();
@@ -54,10 +53,7 @@ export default function CreateServerForm({ isInitial }: Props) {
 
     form.reset();
     router.refresh();
-
-    if (isInitial) {
-    window.location.reload();
-    }
+    onClose();
   };
   return (
     <Form {...form}>
