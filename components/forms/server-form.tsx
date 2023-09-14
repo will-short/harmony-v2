@@ -6,7 +6,6 @@ import * as z from "zod";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formSchema } from "./schema";
 import axios from "axios";
 import { DialogFooter } from "@/components/ui/dialog";
 import {
@@ -23,15 +22,25 @@ import FileUpload from "@/components/file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 
-export default function CreateServerForm() {
+export const formSchema = z.object({
+  name: z.string().min(1, { message: "Server name is required." }),
+  imageUrl: z.string().min(1, { message: "Server image is required." }),
+});
+
+type Props = {
+  defaultValues?: z.infer<typeof formSchema>;
+  serverId?: string;
+};
+
+export default function CreateServerForm({ defaultValues, serverId }: Props) {
   const router = useRouter();
   const { onClose } = useModal();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      imageUrl: "",
+      name: defaultValues?.name || "",
+      imageUrl: defaultValues?.imageUrl || "",
     },
   });
 
@@ -47,9 +56,15 @@ export default function CreateServerForm() {
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (
     values,
   ) => {
-    await axios.post("/api/servers", values).catch((err) => {
-      console.log(err.message);
-    });
+    if (defaultValues) {
+      await axios.patch(`/api/servers/${serverId}`, values).catch((err) => {
+        console.log(err);
+      });
+    } else {
+      await axios.post("/api/servers", values).catch((err) => {
+        console.log(err);
+      });
+    }
 
     form.reset();
     router.refresh();
@@ -103,8 +118,8 @@ export default function CreateServerForm() {
           />
         </div>
         <DialogFooter className="bg-gray-100 px-6 py-4">
-          <Button variant="primary" disabled={isLoading}>
-            Create
+          <Button variant="primary" className="w-full" disabled={isLoading}>
+            {defaultValues ? "Save" : "Create"}
           </Button>
         </DialogFooter>
       </form>

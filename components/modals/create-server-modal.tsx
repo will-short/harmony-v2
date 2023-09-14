@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import CreateServerForm from "./form";
+import CreateServerForm from "@/components/forms/server-form";
 import { useModal } from "@/hooks/use-modal-store";
 
 type Props = {
