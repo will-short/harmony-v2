@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import CreateServerForm from "@/components/forms/server-form";
+import ServerForm from "@/components/forms/server-form";
 import { useModal } from "@/hooks/use-modal-store";
 
 export default function CreateServerModal() {
@@ -30,7 +30,7 @@ export default function CreateServerModal() {
             start talking.
           </DialogDescription>
         </DialogHeader>
-        <CreateServerForm
+        <ServerForm
           serverId={server.id}
           defaultValues={{ name: server.name, imageUrl: server.imageUrl }}
         />

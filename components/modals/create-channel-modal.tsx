@@ -3,35 +3,32 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import ServerForm from "@/components/forms/server-form";
+import ChannelForm from "@/components/forms/channel-form";
 import { useModal } from "@/hooks/use-modal-store";
+import { useParams } from "next/navigation";
 
 type Props = {
   isInitial?: boolean;
 };
 
-export default function CreateServerModal({ isInitial }: Props) {
+export default function CreateChannelModal({ isInitial }: Props) {
   const { isOpen, onClose, type } = useModal();
+  const params = useParams();
 
-  const isModalOpen = type === "createServer" && isOpen;
+  const isModalOpen = type === "createChannel" && isOpen;
 
   return (
     <Dialog open={isInitial || isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Create a server
+            Create a channel
           </DialogTitle>
-          <DialogDescription className="text-center text-zinc-500">
-            Your server is where you and your friends hang out. Make yours and
-            start talking.
-          </DialogDescription>
         </DialogHeader>
-        <ServerForm />
+        <ChannelForm serverId={params?.serverId as string} />
       </DialogContent>
     </Dialog>
   );
