@@ -65,9 +65,11 @@ export default async function ServerMemberSidebar({ serverId }: Props) {
               label="Server Members"
               server={server}
             />
-            {members.map((member) => (
-              <ServerMember key={member.id} member={member} server={server} />
-            ))}
+            <div className="space-y-[2px]">
+              {members.map((member) => (
+                <ServerMember key={member.id} member={member} server={server} />
+              ))}
+            </div>
           </div>
         )}
       </ScrollArea>

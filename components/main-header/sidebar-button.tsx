@@ -5,7 +5,8 @@ import { Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function SidebarButton() {
-  const [isOpen, setIsOpen] = useState(true);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   // in a useEffect to ensure only ran in the browser
   useEffect(() => {
