@@ -11,6 +11,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useParams, useRouter } from "next/navigation";
+import { platform } from "os";
 
 type Props = {
   data: {
@@ -25,8 +26,12 @@ type Props = {
 };
 
 export default function ServerSearch({ data }: Props) {
-  const isWindows = navigator.userAgent?.toLowerCase().includes("window");
   const [open, setOpen] = useState(false);
+  const [isWindows, setIsWindows] = useState(false);
+
+  useEffect(() => {
+    setIsWindows(navigator?.userAgent?.toLowerCase().includes("window"));
+  }, []);
 
   const router = useRouter();
   const params = useParams();
