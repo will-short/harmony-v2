@@ -40,11 +40,16 @@ export const formSchema = z.object({
 });
 
 type Props = {
-  defaultValues?: z.infer<typeof formSchema>;
+  defaultValues?: { name?: string; type?: ChannelType };
   serverId?: string;
+  channelId?: string;
 };
 
-export default function ChannelForm({ defaultValues, serverId }: Props) {
+export default function ChannelForm({
+  defaultValues,
+  serverId,
+  channelId,
+}: Props) {
   const router = useRouter();
   const { onClose } = useModal();
 
@@ -69,7 +74,14 @@ export default function ChannelForm({ defaultValues, serverId }: Props) {
     values
   ) => {
     try {
+      if (defaultValues?.name) {
+        await axios.patch(
+          `/api/servers/${serverId}/channels/${channelId}`,
+          values
+        );
+      } else {
       await axios.post(`/api/servers/${serverId}/channels`, values);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -136,7 +148,7 @@ export default function ChannelForm({ defaultValues, serverId }: Props) {
         </div>
         <DialogFooter className="bg-gray-100 px-6 py-4">
           <Button variant="primary" className="w-full" disabled={isLoading}>
-            {defaultValues ? "Save" : "Create"}
+            {defaultValues?.name ? "Save" : "Create"}
           </Button>
         </DialogFooter>
       </form>

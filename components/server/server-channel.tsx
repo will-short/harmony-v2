@@ -5,6 +5,7 @@ import { Channel, ChannelType, MemberRole, Server } from "@prisma/client";
 import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import ActionTooltip from "@/components/action-tooltip";
+import { useModal } from "@/hooks/use-modal-store";
 
 type Props = {
   channel: Channel;
@@ -19,13 +20,19 @@ const iconMap = {
 } as const;
 
 export default function ServerChannel({ channel, server, role }: Props) {
+  const { onOpen } = useModal();
   const params = useParams();
   const router = useRouter();
 
   const Icon = iconMap[channel.type];
+
+  const onClick = (e: React.MouseEvent) => {
+    router.push(`/servers/${server.id}/channels/${channel.id}`);
+  };
+
   return (
     <button
-      onClick={() => {}}
+      onClick={onClick}
       className={cn(
         "group px-2 py-2 rouned-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-1",
         params?.channelId === channel.id && "bg-zinc-700/20 dark:bg-zinc-700"
@@ -44,10 +51,22 @@ export default function ServerChannel({ channel, server, role }: Props) {
       {channel.name !== "general" && role !== MemberRole.GUEST && (
         <div className="ml-auto flex items-center gap-x-2">
           <ActionTooltip label="Edit">
-            <Edit className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300" />
+            <Edit
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                onOpen("editChannel", { server, channel });
+              }}
+              className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
+            />
           </ActionTooltip>
           <ActionTooltip label="Delete">
-            <Trash className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300" />
+            <Trash
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                onOpen("deleteChannel", { server, channel });
+              }}
+              className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
+            />
           </ActionTooltip>
         </div>
       )}

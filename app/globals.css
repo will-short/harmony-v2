@@ -8,8 +8,20 @@ body,
   height: 100%;
 }
 
+.h-screen {
+  height: calc(100vh - 3rem) !important;
+}
+
+@media screen and (min-width: 768px) {
+  .w-header-screen {
+    width: calc(100vw - 72px) !important;
+  }
+}
+
+
 @layer base {
   :root {
+
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
 
@@ -42,6 +54,7 @@ body,
   }
 
   .dark {
+
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
 

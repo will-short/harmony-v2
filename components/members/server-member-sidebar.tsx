@@ -9,7 +9,7 @@ import { roleIconMap, channelIconMap } from "@/constants";
 import { Separator } from "@/components/ui/separator";
 import ServerSection from "../server/server-section";
 import ServerChannel from "../server/server-channel";
-import ServerMember from "../server/server-member";
+import ServerMember from "./server-member";
 
 type Props = {
   serverId: string;
@@ -63,9 +63,10 @@ export default async function ServerMemberSidebar({ serverId }: Props) {
               sectionType="members"
               role={role}
               label="Server Members"
+              server={server}
             />
             {members.map((member) => (
-              <ServerMember key={member.id} />
+              <ServerMember key={member.id} member={member} server={server} />
             ))}
           </div>
         )}

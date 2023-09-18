@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 import ServerSearch from "./server-search";
 import { Button } from "../ui/button";
 import SidebarButton from "./sidebar-button";
+import { ModeToggle } from "@/components/mode-toggle";
+import ChannelName from "./channel-name";
 
 type Props = {
   serverId: string;
@@ -59,11 +61,12 @@ export default async function MainHeader({ serverId }: Props) {
   );
 
   return (
-    <div className="h-12 w-full border-neutral-200 dark:border-neutral-800 border-b-2 pl-60 flex items-center">
-      <div className="ml-3 flex gap-x-1">
+    <div className="h-12 w-full border-neutral-200 dark:border-neutral-800 border-b-2 md:pl-60 flex items-center">
+      <div className="ml-3 flex items-center gap-x-2">
         <Hash className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+        <ChannelName />
       </div>
-      <div className="ml-auto mr-4 flex gap-x-2">
+      <div className="ml-auto mr-4 flex gap-x-4">
         <SidebarButton />
         <ServerSearch
           data={[
@@ -105,6 +108,7 @@ export default async function MainHeader({ serverId }: Props) {
             },
           ]}
         />
+        <ModeToggle />
       </div>
     </div>
   );

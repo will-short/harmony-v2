@@ -8,25 +8,25 @@ import {
 } from "@/components/ui/dialog";
 import ChannelForm from "@/components/forms/channel-form";
 import { useModal } from "@/hooks/use-modal-store";
-import { useParams } from "next/navigation";
 
-export default function CreateChannelModal() {
+export default function EditChannelModal() {
   const { isOpen, onClose, type, data } = useModal();
-  const params = useParams();
+  const { channel, server } = data;
 
-  const isModalOpen = type === "createChannel" && isOpen;
+  const isModalOpen = type === "editChannel" && isOpen;
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Create a channel
+            Edit channel
           </DialogTitle>
         </DialogHeader>
         <ChannelForm
-          serverId={params?.serverId as string}
-          defaultValues={{ type: data.channelType }}
+          serverId={server?.id}
+          channelId={channel?.id}
+          defaultValues={{ type: channel?.type, name: channel?.name }}
         />
       </DialogContent>
     </Dialog>

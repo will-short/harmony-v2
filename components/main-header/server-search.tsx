@@ -72,7 +72,7 @@ export default function ServerSearch({ data }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition"
+        className="group px-2 py-2 rounded-md flex items-center gap-x-2 w-full dark:bg-[#2B2D31] bg-[#F2F3F5] hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition"
       >
         <Search className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
         <p className="font-semibold text-sm text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition">
