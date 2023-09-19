@@ -5,7 +5,6 @@ import { ChannelType } from "@prisma/client";
 import { Hash, Menu, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 import ServerSearch from "./server-search";
-import SidebarButton from "./sidebar-button";
 import { ModeToggle } from "@/components/mode-toggle";
 import MobileToggle from "@/components/mobile-toggle";
 import UserAvatar from "../user-avatar";
@@ -82,7 +81,6 @@ export default async function MainHeader({
         </span>
       </div>
       <div className="ml-auto mr-4 flex gap-x-4">
-        <SidebarButton />
         <ServerSearch
           data={[
             {

@@ -12,7 +12,6 @@ type Props = {
   };
 };
 export default async function page({ params }: Props) {
-  console.log("IM GETTING HIT");
   const profile = await currentProfile();
   if (!profile) {
     return redirectToSignIn();
@@ -36,8 +35,6 @@ export default async function page({ params }: Props) {
     currentMember.id,
     params.memberId
   );
-
-  console.log(conversation);
 
   if (!conversation) {
     return redirect(`/servers/${params.serverId}`);

@@ -1,3 +1,5 @@
+import ChatInput from "@/components/chat/chat-input";
+import ChatMessages from "@/components/chat/chat-messages";
 import MainHeader from "@/components/main-header/main-header";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
@@ -34,6 +36,8 @@ export default async function page({ params }: Props) {
     redirect("/");
   }
 
+  const apiUrl = `/api/servers/${params.serverId}/channels/${channel.id}/messages`;
+
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <MainHeader
@@ -41,6 +45,16 @@ export default async function page({ params }: Props) {
         pageName={channel.name}
         type="channel"
       />
+      <div className="mt-auto h-full w-full flex flex-col md:pr-60">
+        <ChatMessages
+          member={member}
+          name={channel.name}
+          type="channel"
+          apiUrl={apiUrl}
+          chatId={channel.id}
+        />
+        <ChatInput name={channel.name} type="channel" apiUrl={apiUrl} />
+      </div>
     </div>
   );
 }

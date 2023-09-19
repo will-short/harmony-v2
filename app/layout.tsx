@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/components/providers/theme";
 import ModalProvider from "@/components/providers/modal-provider";
 
 import { cn } from "@/lib/utils";
+import { BroadcastProvider } from "@/components/providers/broadcast-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -30,8 +32,12 @@ export default function RootLayout({
             enableSystem
             storageKey="harmony-theme"
           >
-            <ModalProvider />
-            {children}
+            <BroadcastProvider>
+              <QueryProvider>
+                <ModalProvider />
+                {children}
+              </QueryProvider>
+            </BroadcastProvider>
           </ThemeProvider>
         </body>
       </html>

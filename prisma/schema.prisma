@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -21,6 +21,8 @@ model Profile {
   servers Server[]
   members Member[]
   channels Channel[]
+  directMessages DirectMessage[]
+  messages Message[]
 }
 
 model Server {
@@ -102,7 +104,7 @@ model Message {
   id String @id @default(uuid())
   content String @db.Text
 
-  fileUrl String @db.Text
+  fileUrl String? @db.Text
 
   memberId String
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
@@ -115,8 +117,12 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  userId String
+  profile Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
   @@index([memberId])
   @@index([channelId])
+  @@index([userId])
 }
 
 model Conversation {
@@ -139,7 +145,7 @@ model Conversation {
 model DirectMessage {
   id String @id @default(uuid())
   content String @db.Text
-  fileUrl String @db.Text
+  fileUrl String? @db.Text
 
   conversationId String
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -152,6 +158,10 @@ model DirectMessage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  userId String
+  profile Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
   @@index([conversationId])
   @@index([memberId])
+  @@index([userId])
 }
