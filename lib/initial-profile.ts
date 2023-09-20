@@ -1,12 +1,13 @@
 import { currentUser, redirectToSignIn } from "@clerk/nextjs";
 
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 export const initialProfile = async () => {
   const user = await currentUser();
 
   if (!user) {
-    return redirectToSignIn();
+    return redirect("/splash");
   }
 
   const profile = await db.profile.findUnique({

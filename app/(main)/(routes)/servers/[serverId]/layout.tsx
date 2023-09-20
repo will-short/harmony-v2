@@ -15,7 +15,7 @@ export default async function layout({ children, params }: Props) {
   const profile = await currentProfile();
 
   if (!profile) {
-    return redirectToSignIn;
+    return redirectToSignIn();
   }
 
   const server = await db.server.findUnique({
@@ -31,11 +31,11 @@ export default async function layout({ children, params }: Props) {
 
   return (
     <div className="h-full">
-      <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
+      <div className="max-md:hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
         <ServerSidebar serverId={server.id} />
       </div>
       <main className="h-full md:pl-60">{children}</main>
-      <div className="hidden lg:flex h-full w-60 z-20 flex-col fixed inset-y-0 right-0 mt-12">
+      <div className="max-lg:hidden lg:flex h-full w-60 z-20 flex-col fixed inset-y-0 right-0 mt-12">
         <ServerMemberSidebar serverId={server.id} />
       </div>
     </div>

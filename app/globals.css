@@ -6,16 +6,7 @@ html,
 body,
 :root {
   height: 100%;
-}
-
-.h-screen {
-  height: calc(100vh - 3rem) !important;
-}
-
-@media screen and (min-width: 768px) {
-  .w-header-screen {
-    width: calc(100vw - 72px) !important;
-  }
+  overscroll-behavior: none;
 }
 
 
