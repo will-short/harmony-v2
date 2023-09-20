@@ -1,4 +1,7 @@
+import ChatInput from "@/components/chat/chat-input";
+import ChatMessages from "@/components/chat/chat-messages";
 import MainHeader from "@/components/main-header/main-header";
+import MediaRoom from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
@@ -10,8 +13,11 @@ type Props = {
     serverId: string;
     memberId: string;
   };
+  searchParams: {
+    video?: boolean;
+  };
 };
-export default async function page({ params }: Props) {
+export default async function page({ params, searchParams }: Props) {
   const profile = await currentProfile();
   if (!profile) {
     return redirectToSignIn();
@@ -44,14 +50,33 @@ export default async function page({ params }: Props) {
 
   const otherMember = memberOne.id === currentMember.id ? memberTwo : memberOne;
 
+  const apiUrl = `/api/servers/${params.serverId}/conversations/${conversation.id}/direct-messages`;
+
   return (
-    <div className="bg-white dark:bg-[#313338]">
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <MainHeader
         imageUrl={otherMember.profile.imageUrl}
         pageName={otherMember.profile.name}
         serverId={params.serverId}
         type="conversation"
       />
+      {!searchParams.video && (
+        <>
+          <ChatMessages
+            member={currentMember}
+            name={otherMember.profile.name}
+            type="conversation"
+            apiUrl={apiUrl}
+            chatId={conversation.id}
+          />
+          <ChatInput
+            name={otherMember.profile.name}
+            type="conversation"
+            apiUrl={apiUrl}
+          />
+        </>
+      )}
+      {searchParams.video && <MediaRoom chatId={conversation.id} video audio />}
     </div>
   );
 }

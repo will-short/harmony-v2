@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -26,6 +26,7 @@ const formSchema = z.object({
 export default function ChatInput({ apiUrl, name, type }: Props) {
   const { onOpen } = useModal();
   const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,6 +41,7 @@ export default function ChatInput({ apiUrl, name, type }: Props) {
   ) => {
     try {
       await axios.post(apiUrl, values);
+
       form.reset();
       router.refresh();
     } catch (err) {
@@ -49,7 +51,7 @@ export default function ChatInput({ apiUrl, name, type }: Props) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="lg:pr-60">
         <FormField
           control={form.control}
           name="content"

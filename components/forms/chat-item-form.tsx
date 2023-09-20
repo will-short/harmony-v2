@@ -29,7 +29,6 @@ type Props = {
 };
 
 export default function ChatItemForm({ content, apiUrl, setIsEditing }: Props) {
-  console.log(apiUrl);
   const router = useRouter();
 
   const form = useForm({

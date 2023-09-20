@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 import ServerSearch from "./server-search";
 import { ModeToggle } from "@/components/mode-toggle";
 import MobileToggle from "@/components/mobile-toggle";
-import UserAvatar from "../user-avatar";
+import UserAvatar from "@/components/user-avatar";
+import ChatVideoButton from "@/components/chat/chat-video-button";
 
 type Props = {
   serverId: string;
@@ -80,7 +81,8 @@ export default async function MainHeader({
           {pageName}
         </span>
       </div>
-      <div className="ml-auto mr-4 flex gap-x-4">
+      <div className="ml-auto mr-4 flex gap-x-4 items-center">
+        {type === "conversation" && <ChatVideoButton />}
         <ServerSearch
           data={[
             {

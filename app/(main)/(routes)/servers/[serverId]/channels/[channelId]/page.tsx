@@ -1,9 +1,11 @@
 import ChatInput from "@/components/chat/chat-input";
 import ChatMessages from "@/components/chat/chat-messages";
 import MainHeader from "@/components/main-header/main-header";
+import MediaRoom from "@/components/media-room";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirectToSignIn } from "@clerk/nextjs";
+import { ChannelType } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 type Props = {
@@ -45,16 +47,24 @@ export default async function page({ params }: Props) {
         pageName={channel.name}
         type="channel"
       />
-      <div className="mt-auto h-full w-full flex flex-col md:pr-60">
-        <ChatMessages
-          member={member}
-          name={channel.name}
-          type="channel"
-          apiUrl={apiUrl}
-          chatId={channel.id}
-        />
-        <ChatInput name={channel.name} type="channel" apiUrl={apiUrl} />
-      </div>
+      {channel.type === ChannelType.TEXT && (
+        <>
+          <ChatMessages
+            member={member}
+            name={channel.name}
+            type="channel"
+            apiUrl={apiUrl}
+            chatId={channel.id}
+          />
+          <ChatInput name={channel.name} type="channel" apiUrl={apiUrl} />
+        </>
+      )}
+      {channel.type === ChannelType.VOICE && (
+        <MediaRoom chatId={channel.id} video={false} audio />
+      )}
+      {channel.type === ChannelType.VIDEO && (
+        <MediaRoom chatId={channel.id} video audio />
+      )}
     </div>
   );
 }

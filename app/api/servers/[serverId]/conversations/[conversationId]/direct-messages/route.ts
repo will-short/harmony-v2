@@ -1,18 +1,18 @@
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { Message } from "@prisma/client";
+import { DirectMessage, Message } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 const MESSAGES_BATCH = 15;
 
 export async function POST(
   req: Request,
-  { params }: { params: { serverId: string; channelId: string } }
+  { params }: { params: { serverId: string; conversationId: string } }
 ) {
   try {
     const profile = await currentProfile();
     const { content, fileUrl } = await req.json();
-    const { serverId, channelId } = params;
+    const { serverId, conversationId } = params;
 
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -22,55 +22,53 @@ export async function POST(
       return new NextResponse("Server ID Missing", { status: 400 });
     }
 
-    if (!channelId) {
-      return new NextResponse("Channel ID Missing", { status: 400 });
+    if (!conversationId) {
+      return new NextResponse("Conversation ID Missing", { status: 400 });
     }
 
     if (!content) {
       return new NextResponse("Content Missing", { status: 400 });
     }
 
-    const server = await db.server.findFirst({
+    const conversation = await db.conversation.findFirst({
       where: {
-        id: serverId,
-        members: {
-          some: {
-            profileId: profile.id,
+        id: conversationId,
+        OR: [
+          { memberOne: { profileId: profile.id } },
+          { memberTwo: { profileId: profile.id } },
+        ],
+      },
+      include: {
+        memberOne: {
+          include: {
+            profile: true,
+          },
+        },
+        memberTwo: {
+          include: {
+            profile: true,
           },
         },
       },
-      include: {
-        members: true,
-      },
     });
 
-    if (!server) {
-      return new NextResponse("Server Not Found", { status: 404 });
+    if (!conversation) {
+      return new NextResponse("Conversation Not Found", { status: 404 });
     }
 
-    const channel = await db.channel.findFirst({
-      where: {
-        id: channelId,
-        serverId,
-      },
-    });
-
-    if (!channel) {
-      return new NextResponse("Channel Not Found", { status: 404 });
-    }
-
-    const member = server.members.find(
-      (member) => member.profileId === profile.id
-    );
+    const member =
+      conversation.memberOne.profileId === profile.id
+        ? conversation.memberOne
+        : conversation.memberTwo;
 
     if (!member) {
       return new NextResponse("Member Not Found", { status: 404 });
     }
 
-    const message = await db.message.create({
+    const message = await db.directMessage.create({
       data: {
         userId: profile.id,
-        channelId,
+        conversationId,
         content,
         fileUrl,
         memberId: member.id,
@@ -86,20 +84,20 @@ export async function POST(
 
     return NextResponse.json(message);
   } catch (e) {
-    console.log("[MESSAGES_POST]", e);
+    console.log("[DM_POST]", e);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
 export async function GET(
   req: Request,
-  { params }: { params: { serverId: string; channelId: string } }
+  { params }: { params: { serverId: string; conversationId: string } }
 ) {
   try {
     const { searchParams } = new URL(req.url);
     const cursor = searchParams.get("cursor");
 
-    const { channelId } = params;
+    const { conversationId } = params;
 
     const profile = await currentProfile();
 
@@ -107,21 +105,21 @@ export async function GET(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!channelId) {
-      return new NextResponse("Channel ID Missing", { status: 400 });
+    if (!conversationId) {
+      return new NextResponse("Conversation ID Missing", { status: 400 });
     }
 
-    let messages: Message[] = [];
+    let messages: DirectMessage[] = [];
 
     if (cursor) {
-      messages = await db.message.findMany({
+      messages = await db.directMessage.findMany({
         take: MESSAGES_BATCH,
         skip: 1,
         cursor: {
           id: cursor,
         },
         where: {
-          channelId,
+          conversationId,
         },
         include: {
           member: {
@@ -135,10 +133,10 @@ export async function GET(
         },
       });
     } else {
-      messages = await db.message.findMany({
+      messages = await db.directMessage.findMany({
         take: MESSAGES_BATCH,
         where: {
-          channelId,
+          conversationId,
         },
         include: {
           member: {
@@ -160,7 +158,7 @@ export async function GET(
 
     return NextResponse.json({ items: messages, nextCursor });
   } catch (e) {
-    console.log("[MESSAGES_GET]", e);
+    console.log("[DM_GET]", e);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

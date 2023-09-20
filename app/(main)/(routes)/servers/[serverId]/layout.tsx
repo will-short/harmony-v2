@@ -35,7 +35,7 @@ export default async function layout({ children, params }: Props) {
         <ServerSidebar serverId={server.id} />
       </div>
       <main className="h-full md:pl-60">{children}</main>
-      <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0 right-0 mt-12">
+      <div className="hidden lg:flex h-full w-60 z-20 flex-col fixed inset-y-0 right-0 mt-12">
         <ServerMemberSidebar serverId={server.id} />
       </div>
     </div>

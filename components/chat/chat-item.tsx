@@ -45,7 +45,7 @@ export default function ChatItem({ message, currentMember, apiUrl }: Props) {
       return;
     }
     router.push(
-      `/server/${params.serverId}/conversations/${message.member.id}`
+      `/servers/${params.serverId}/conversations/${message.member.id}`
     );
   };
 

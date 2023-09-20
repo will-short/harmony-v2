@@ -2,10 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { createClient } from "@supabase/supabase-js";
+import { SupabaseClient, createClient } from "@supabase/supabase-js";
 
 type BroadcastType = {
-  supabase: any | null;
+  supabase: SupabaseClient<any, "public", any> | null;
   isConnected: boolean;
 };
 
